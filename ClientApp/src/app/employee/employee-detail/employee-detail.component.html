@@ -1,0 +1,14 @@
+
+<table *ngIf="subordinates && subordinates.length > 0; else hasNoSubordinates">
+  <tr>
+    Subordinates
+  </tr>
+  <tr *ngFor="let subordinate of subordinates">
+    <td>{{ subordinate.id }}</td>
+    <td>{{ subordinate.name }}</td>
+    <td>{{ subordinate.surname }}</td>
+  </tr>
+</table>
+<ng-template #hasNoSubordinates>
+  No subordinates.....
+</ng-template>

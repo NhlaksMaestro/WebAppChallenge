@@ -1,0 +1,141 @@
+<h1 id="tableLabel">Employees</h1>
+<div class="row" *ngIf="alertMessage && alertMessage.length > 0">
+  <div class="col-md-12 mb-6">
+    <div class="alert alert-success" role="alert">
+      {{alertMessage}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>
+<p *ngIf="!employees"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="employees">
+  <thead>
+    <!--<tr>
+      <td>
+        <button type="button" class="btn btn-secondary" (click)="createNewEmployee()">Add New Employee</button>
+      </td>
+    </tr>-->
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Surname</th>
+      <th *ngIf="selectedEmployeeToEdit">Manager</th>
+      <th *ngIf="!selectedEmployeeToEdit">Manager Name</th>
+      <th *ngIf="!selectedEmployeeToEdit">Manager Surname</th>
+      <th>Edit/Save</th>
+      <th>View Subordinates</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="!selectedEmployeeToEdit && createNewUser">
+      <td *ngIf="employeeName"></td>
+      <td *ngIf="employeeSurname"></td>
+      <td *ngIf="employeeManagers"></td>
+    </tr>
+    <tr *ngFor="let employee of employees">
+      <td>{{ employee.id }}</td>
+      <td *ngIf="checkEmployeeSelected(employee); else employeeName">
+        <i>{{ employee.name }}</i>
+      </td>
+      <td *ngIf="checkEmployeeSelected(employee); else employeeSurname"><i>{{ employee.surname }}</i></td>
+      <td *ngIf="checkEmployeeSelected(employee); else employeeManagers">
+        <strong *ngIf="employee.manager; else noManager">{{ employee.manager.name}}</strong>
+      </td>
+      <td *ngIf="!selectedEmployeeToEdit">
+        <strong *ngIf="employee.manager; else noManager">{{ employee.manager.surname }}</strong>
+      </td>
+      <td *ngIf="checkEmployeeSelected(employee); else saveEmployeeButton">
+        <button type="button" class="btn btn-primary" (click)="editEmployee(employee)">Edit {{ employee.name }}'s Details</button>
+      </td>
+      <td>
+        <button type="button" class="btn btn-primary" (click)="viewSubordinates(employee.inverseManager, employee)">View {{ employee.name }}'s Subordinates</button>
+      </td>
+      <td colspan="6" *ngIf="selectedEmployee && selectedEmployee.id === employee.id">
+        <app-subordinates [subordinates]="subordinates"
+                          [selectedEmployee]="selectedEmployee"
+                          (clearedSelectedEmployee)="clearEmployeeSelection($event)"></app-subordinates>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<ng-template #employeeName>
+  <td>
+    <div class="form-row">
+      <div class="col-md-12 mb-6">
+        {{name.errors}}
+        <input type="text"
+               [ngClass]="{'form-control': true, 'is-valid': true}"
+               id="name"
+               placeholder="Name"
+               [(ngModel)]="name.value"
+               required>
+        <div class="valid-feedback" *ngIf="name.invalid && (name.dirty || surname.touched)">
+          <div *ngIf="name.errors.required">
+            Name is required.
+          </div>
+          <div *ngIf="name.errors.minlength">
+            Name must be at least 1 characters long.
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</ng-template>
+
+<ng-template #employeeSurname>
+  <td>
+    <div class="form-row">
+      <div class="col-md-12 mb-6">
+        <input type="text"
+               [ngClass]="{'form-control': true, 'is-valid': true}"
+               id="surname"
+               placeholder="Surname"
+               [(ngModel)]="surname.value" required>
+        <div class="invalid-feedback" *ngIf="surname.invalid && (surname.dirty || surname.touched)">
+          <div *ngIf="surname.errors.required">
+            Surname is required.
+          </div>
+          <div *ngIf="surname.errors.minlength">
+            Surname must be at least 1 characters long.
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</ng-template>
+<ng-template #employeeManagers>
+  <td>
+    <div class="form-row">
+      <div class="col-md-12 mb-6">
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" (click)="expandDropdownHandler()" aria-haspopup="true" aria-expanded="false">
+            {{selectedManager}}
+          </button>
+          <div [ngClass]="{'dropdown-menu': true, 'show': expandDropdown}" aria-labelledby="dropdownMenuButton">
+            <span [ngClass]="{'dropdown-item': true, 'active':selectedEmployeeToEdit && selectedEmployeeToEdit.id}"
+                  *ngFor="let employee of employees">
+              <strong (click)="selectManger(employee)">{{employee.name}} {{employee.surname}}</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</ng-template>
+
+<ng-template #saveEmployeeButton>
+  <td>
+    <button type="button" class="btn btn-success" (click)="saveEmployee()">Save</button>
+    <button type="button" class="btn btn-primary" (click)="cancelEdit()">Cancel Edit</button>
+  </td>
+</ng-template>
+
+<ng-template #noManager>
+  <b>none</b>
+</ng-template>
+

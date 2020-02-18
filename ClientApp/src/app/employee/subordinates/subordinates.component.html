@@ -1,0 +1,32 @@
+
+  <table *ngIf="subordinates && subordinates.length > 0; else hasNoSubordinates">
+    <tr>
+      <td colspan="3">
+        <button type="button" class="btn btn-primary" (click)="close()">Close Subordinates</button>
+      </td>
+    </tr>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Surname</th>
+    </tr>
+    <tr *ngFor="let subordinate of subordinates">
+      <td>{{ subordinate.id }}</td>
+      <td>{{ subordinate.name }}</td>
+      <td>{{ subordinate.surname }}</td>
+    </tr>
+  </table>
+  <ng-template #hasNoSubordinates>
+    <table>
+      <tr>
+        <td colspan="3">
+          <button type="button" class="btn btn-primary" (click)="close()">Close Subordinates</button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          No subordinates.....
+        </td>
+      </tr>
+    </table>
+  </ng-template>
