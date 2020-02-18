@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebAppChallenge.Model\WebAppChallenge.Model.csproj" />
+    <ProjectReference Include="..\WebChallenge.Contracts\WebChallenge.Contracts.csproj" />
+    <ProjectReference Include="..\WebChallenge.DB\WebChallenge.DB.csproj" />
+  </ItemGroup>
+
+</Project>
